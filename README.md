@@ -12,4 +12,4 @@ Not exactly the same as course (some depreciations like Navigation)
 - [x] Rename `.js` to `.jsx`
 - [x] Move sensitive data to `.env` file
 - [ ] Save favorites to local storage
-- [ ] Check connectivity - [see here](https://stackoverflow.com/a/62498662)
+- [x] Check connectivity - [see here](https://stackoverflow.com/a/62498662)
