@@ -8,4 +8,8 @@ Not exactly the same as course (some depreciations like Navigation)
 ## Todo
 - [ ] Add PanResponder to the Share button to move it
 - [x] Global loading component
-    - [ ] Fix styles as props (see here)[https://stackoverflow.com/questions/29363671/can-i-make-dynamic-styles-in-react-native]
+- [ ] Loading component : fix styles as props - [see here](https://stackoverflow.com/questions/29363671/can-i-make-dynamic-styles-in-react-native)
+- [x] Rename `.js` to `.jsx`
+- [x] Move sensitive data to `.env` file
+- [ ] Save favorites to local storage
+- [ ] Check connectivity - [see here](https://stackoverflow.com/a/62498662)
