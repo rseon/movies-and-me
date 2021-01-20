@@ -1,83 +1,91 @@
-import React, { Component } from 'react'
-import { FlatList, StyleSheet, Text } from 'react-native'
-import FilmItem from './FilmItem'
-import { connect } from 'react-redux'
+import React, { Component } from 'react';
+import { FlatList, StyleSheet, Text } from 'react-native';
+import { connect } from 'react-redux';
+import FilmItem from './FilmItem';
 
 class FilmList extends Component {
 
   _displayDetailForFilm = (idFilm) => {
-    this.props.navigation.navigate('FilmDetail', { idFilm })
+    const { navigation } = this.props;
+    navigation.navigate('FilmDetail', { idFilm });
   }
 
   render() {
-    if (this.props.isLoading && (!this.props.films || !this.props.films.length)) {
-      return null
+    const {
+      favoriteList,
+      initSearchFilms,
+      isLoading,
+      isRefreshing,
+      films,
+      loadFilms,
+      pagination,
+      searchedText,
+    } = this.props;
+
+    if (isLoading && (!films || !films.length)) {
+      return null;
     }
 
-    if (!this.props.favoriteList && (!this.props.searchedText || !this.props.searchedText.length)) {
-      return <Text style={styles.enter_text}>Recherchez un film</Text>
+    if (!favoriteList && (!searchedText || !searchedText.length)) {
+      return <Text style={styles.enter_text}>Recherchez un film</Text>;
     }
 
-    if (!this.props.films || !this.props.films.length) {
-      return <Text style={styles.no_result}>Aucun resultat</Text>
+    if (!films || !films.length) {
+      return <Text style={styles.no_result}>Aucun resultat</Text>;
     }
 
     return (
       <FlatList
         style={styles.list}
-        data={this.props.films}
-        extraData={this.props.favoritesFilm}
+        data={films}
+        extraData={favoriteList}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <FilmItem
             film={item}
             isFilmFavorite={
-              this.props.favoritesFilm.findIndex(
-                (film) => film.id === item.id
-              ) !== -1
-                ? true
-                : false
+              favoriteList.findIndex((film) => film.id === item.id) !== -1
             }
-            displayDetailForFilm={this._displayDetailForFilm}
+            displayDetailForFilm={this.displayDetailForFilm}
           />
         )}
         onEndReachedThreshold={0.5}
         onEndReached={() => {
-          if (
-            !this.props.favoriteList &&
-            this.props.pagination.current < this.props.pagination.total
-          ) {
-            this.props.loadFilms();
+          if (!favoriteList && pagination.current < pagination.total) {
+            loadFilms();
           }
         }}
-        refreshing={this.props.isRefreshing}
+        refreshing={isRefreshing}
         onRefresh={() => {
-            this.props.initSearchFilms()
+          initSearchFilms();
         }}
       />
     );
   }
 }
 
+const red = 'red';
+const blue = 'blue';
+
 const styles = StyleSheet.create({
   list: {
-    flex: 1
+    flex: 1,
   },
   no_result: {
-    color: 'red',
+    color: red,
     textAlign: 'center',
-    marginTop: 20
+    marginTop: 20,
   },
   enter_text: {
-    color: 'blue',
+    color: blue,
     textAlign: 'center',
-    marginTop: 20
-  }
-})
+    marginTop: 20,
+  },
+});
 
-export default connect(state => {
-  const { favoritesFilm } = state
+export default connect((state) => {
+  const { favoritesFilm } = state;
   return {
     favoritesFilm
-  }
-})(FilmList)
+  };
+})(FilmList);

@@ -19,5 +19,5 @@ Not exactly the same as course (some depreciations like Navigation) and improvem
     - [issue 3](https://github.com/react-native-netinfo/react-native-netinfo/issues/332#issuecomment-753475964)
 - [ ] Save searches for history
 - [x] Pull-to-refresh on search
-- [ ] Add eslint
+- [x] Add eslint - [see here](https://medium.com/swlh/add-eslint-support-to-your-react-native-project-with-react-hooks-1bbac3fac25d) - (bad idea 🤣)
 - [x] Confirmation message when favorite is added/removed

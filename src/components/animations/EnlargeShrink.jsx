@@ -1,40 +1,40 @@
-import React from 'react'
-import { Animated } from 'react-native'
+import React from 'react';
+import { Animated } from 'react-native';
 
 class EnlargeShrink extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      viewSize: new Animated.Value(this.getSize()),
+    };
+  }
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            viewSize: new Animated.Value(this._getSize())
-        }
-    }
+  componentDidUpdate() {
+    const { viewSize } = this.state;
+    Animated.spring(viewSize, {
+      toValue: this.getSize(),
+      useNativeDriver: false,
+    }).start();
+  }
 
-    _getSize() {
-        if (this.props.shouldEnlarge) {
-            return 80
-        }
-        return 40
+  getSize() {
+    const { shouldEnlarge } = this.props;
+    if (shouldEnlarge) {
+      return 80;
     }
-    // La méthode componentDidUpdate est exécuté chaque fois que le component est mise à jour, c'est l'endroit parfait pour lancer / relancer notre animation.
-    componentDidUpdate() {
-        Animated.spring(
-            this.state.viewSize,
-            {
-                toValue: this._getSize(),
-                useNativeDriver: false
-            }
-        ).start()
-    }
+    return 40;
+  }
 
-    render() {
-        return (
-            <Animated.View
-                style={{ width: this.state.viewSize, height: this.state.viewSize }}>
-                {this.props.children}
-            </Animated.View>
-        )
-    }
+  render() {
+    const { viewSize } = this.state;
+    const { children } = this.props;
+
+    return (
+      <Animated.View style={{ width: viewSize, height: viewSize }}>
+        {children}
+      </Animated.View>
+    );
+  }
 }
 
-export default EnlargeShrink
+export default EnlargeShrink;

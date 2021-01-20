@@ -1,34 +1,36 @@
-import React from 'react'
-import { Animated, Dimensions } from 'react-native'
+import React from 'react';
+import { Animated, Dimensions } from 'react-native';
 
 class FadeIn extends React.Component {
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            positionLeft: new Animated.Value(Dimensions.get('window').width)
-        }
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      positionLeft: new Animated.Value(Dimensions.get('window').width)
+    };
+  }
 
-    componentDidMount() {
-        Animated.spring(
-            this.state.positionLeft,
-            {
-                toValue: 0,
-                useNativeDriver: false
-            }
-        ).start()
-    }
+  componentDidMount() {
+    const { positionLeft } = this.state;
 
-    render() {
-        return (
-            <Animated.View
-                style={{ left: this.state.positionLeft }}
-                >
-                {this.props.children}
-            </Animated.View>
-        )
-    }
+    Animated.spring(positionLeft, {
+      toValue: 0,
+      useNativeDriver: false,
+    }).start();
+  }
+
+  render() {
+    const { positionLeft } = this.state;
+    const { children } = this.props;
+
+    return (
+      <Animated.View
+        style={{ left: positionLeft }}
+      >
+        {children}
+      </Animated.View>
+    );
+  }
 }
 
-export default FadeIn
+export default FadeIn;

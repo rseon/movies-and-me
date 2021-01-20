@@ -1,30 +1,35 @@
-import React from 'react'
-import { Button, StyleSheet, View } from 'react-native'
-import HelloWorld from './Test/HelloWorld'
+import React from 'react';
+import { Button, StyleSheet, View } from 'react-native';
+import HelloWorld from './Test/HelloWorld';
 
-class Test extends React.Component {
+export default function Test(props) {
 
-    render() {
-        return (
-            <View style={styles.main_container}>
-                <Button title="Différents styles" onPress={() => this.props.navigation.navigate('TestDifferentStyles')} />
+  return (
+    <View style={styles.main_container}>
+      <Button
+        title="Différents styles"
+        onPress={() => props.navigation.navigate('TestDifferentStyles')}
+      />
 
-                <Button title="Animations" onPress={() => this.props.navigation.navigate('TestAnimations')} />
-                
-                <View style={{ marginTop: 20 }}>
-                    <HelloWorld />
-                </View>
-            </View>
-        )
-    }
+      <Button
+        title="Animations"
+        onPress={() => props.navigation.navigate('TestAnimations')}
+      />
+
+      <View style={styles.view}>
+        <HelloWorld />
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    main_container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-})
-
-export default Test
+  main_container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  view: {
+    marginTop: 20
+  }
+});

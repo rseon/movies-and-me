@@ -1,28 +1,22 @@
-import React, { Component } from 'react'
-import { StyleSheet, Text } from 'react-native'
-import FilmList from '../components/FilmList'
-import { connect } from 'react-redux'
+import React from 'react';
+import { connect } from 'react-redux';
+import FilmList from '../components/FilmList';
 
-class Favorites extends Component {
+const Favorites = ({ favoritesFilm, navigation }) => {
+  return (
+    <FilmList
+      films={favoritesFilm}
+      navigation={navigation}
+      favoriteList
+      initSearchFilms={() => {}}
+      isRefreshing={false}
+    />
+  );
+};
 
-    render() {
-        return (
-          <FilmList
-            films={this.props.favoritesFilm}
-            navigation={this.props.navigation}
-            favoriteList={true}
-            initSearchFilms={() => {}}
-            isRefreshing={false}
-          />
-        );
-    }
-}
-
-const styles = StyleSheet.create({})
-
-export default connect(state => {
-    const { favoritesFilm } = state
-    return {
-        favoritesFilm
-    }
-})(Favorites)
+export default connect((state) => {
+  const { favoritesFilm } = state;
+  return {
+    favoritesFilm
+  };
+})(Favorites);

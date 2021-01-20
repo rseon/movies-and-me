@@ -1,13 +1,16 @@
-import React, { Component } from 'react'
-import { Alert, Button, Keyboard, StyleSheet, TextInput, View } from 'react-native'
-import { getFilmsFromApiWithSearchedText } from '../api/TMDB'
-import FilmList from '../components/FilmList'
-import Loading from '../components/Loading'
-import { NetworkContext } from "../components/NetworkProvider";
+import React, { Component } from 'react';
+import {
+  Alert, Button, Keyboard, StyleSheet, TextInput, View
+} from 'react-native';
+import { getFilmsFromApiWithSearchedText } from '../api/TMDB';
+import FilmList from '../components/FilmList';
+import Loading from '../components/Loading';
+import { NetworkContext } from '../components/NetworkProvider';
+
+Search.contextType = NetworkContext;
 
 class Search extends Component {
-  static contextType = NetworkContext;
-
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -15,25 +18,27 @@ class Search extends Component {
       isLoading: false,
       isRefreshing: false
     };
-    this.searchedText = "";
+    this.searchedText = '';
     this.pagination = {
       current: 0,
       total: 0,
     };
 
     // Permet d'appeler cette méthode dans d'autres components en étant bindé à celui-ci
-    this._loadFilms = this._loadFilms.bind(this);
-    this._initSearchFilms = this._initSearchFilms.bind(this);
+    this.loadFilms = this.loadFilms.bind(this);
+    this.initSearchFilms = this.initSearchFilms.bind(this);
   }
 
   // Private methods
-  _loadFilms() {
+  loadFilms() {
     Keyboard.dismiss();
+    const { isConnected } = this.context;
+
     if (this.searchedText.length > 0) {
-      if (!this.context.isConnected) {
+      if (!isConnected) {
         Alert.alert(
-          "Non connecté",
-          "Vous devez être connecté pour rechercher un film"
+          'Non connecté',
+          'Vous devez être connecté pour rechercher un film'
         );
       } else {
         this.setState({ isLoading: true });
@@ -45,19 +50,23 @@ class Search extends Component {
             current: data.page,
             total: data.total_pages,
           };
+          this.setState((prevstate) => {
+            return { films: [...prevstate.films, ...data.results] };
+          });
           this.setState({
-            films: [...this.state.films, ...data.results],
             isLoading: false,
-            isRefreshing: false
+            isRefreshing: false,
           });
         });
       }
     }
-  };
-  _searchTextInputChanged(text) {
+  }
+
+  searchTextInputChanged(text) {
     this.searchedText = text;
   }
-  _initSearchFilms() {
+
+  initSearchFilms() {
     this.pagination = {
       current: 0,
       total: 0,
@@ -67,53 +76,58 @@ class Search extends Component {
         films: [],
       },
       () => {
-        this._loadFilms();
+        this.loadFilms();
       }
     );
   }
 
   // Render
   render() {
+    const { films, isLoading, isRefreshing } = this.state;
+    const { navigation } = this.props;
+
     return (
       <View style={styles.main_container}>
         <TextInput
           style={styles.textinput}
           placeholder="Titre du film"
-          onChangeText={(text) => this._searchTextInputChanged(text)}
-          onSubmitEditing={() => this._initSearchFilms()}
+          onChangeText={(text) => this.searchTextInputChanged(text)}
+          onSubmitEditing={() => this.initSearchFilms()}
         />
-        <Button title="Rechercher" onPress={() => this._initSearchFilms()} />
+        <Button title="Rechercher" onPress={() => this.initSearchFilms()} />
 
         <FilmList
-          films={this.state.films}
-          navigation={this.props.navigation}
-          loadFilms={this._loadFilms}
+          films={films}
+          navigation={navigation}
+          loadFilms={this.loadFilms}
           pagination={this.pagination}
           favoriteList={false}
-          isLoading={this.state.isLoading}
+          isLoading={isLoading}
           searchedText={this.searchedText}
-          initSearchFilms={this._initSearchFilms}
-          isRefreshing={this.state.isRefreshing}
+          initSearchFilms={this.initSearchFilms}
+          isRefreshing={isRefreshing}
         />
 
-        <Loading isLoading={this.state.isLoading} full={false} />
+        <Loading isLoading={isLoading} full={false} />
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
-    main_container: {
-        flex: 1,
-    },
-    textinput: {
-        marginLeft: 5,
-        marginRight: 5,
-        height: 50,
-        borderColor: '#000000',
-        borderWidth: 1,
-        paddingLeft: 5
-    },
-})
+const black = '#000';
 
-export default Search
+const styles = StyleSheet.create({
+  main_container: {
+    flex: 1,
+  },
+  textinput: {
+    marginLeft: 5,
+    marginRight: 5,
+    height: 50,
+    borderColor: black,
+    borderWidth: 1,
+    paddingLeft: 5,
+  },
+});
+
+export default Search;
