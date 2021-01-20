@@ -24,8 +24,6 @@ const imgShareIos = require('../assets/images/share.ios.png');
 const imgFavoriteBorder = require('../assets/images/favorite_border.png');
 const imgFavorite = require('../assets/images/favorite.png');
 
-FilmDetail.contextType = NetworkContext;
-
 class FilmDetail extends Component {
 
   constructor(props) {
@@ -230,6 +228,8 @@ class FilmDetail extends Component {
     );
   }
 }
+
+FilmDetail.contextType = NetworkContext;
 
 const black = '#000';
 const gray = '#666666';

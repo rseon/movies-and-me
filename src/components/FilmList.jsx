@@ -5,7 +5,7 @@ import FilmItem from './FilmItem';
 
 class FilmList extends Component {
 
-  _displayDetailForFilm = (idFilm) => {
+  displayDetailForFilm = (idFilm) => {
     const { navigation } = this.props;
     navigation.navigate('FilmDetail', { idFilm });
   }
@@ -13,6 +13,7 @@ class FilmList extends Component {
   render() {
     const {
       favoriteList,
+      favoritesFilm,
       initSearchFilms,
       isLoading,
       isRefreshing,
@@ -44,7 +45,7 @@ class FilmList extends Component {
           <FilmItem
             film={item}
             isFilmFavorite={
-              favoriteList.findIndex((film) => film.id === item.id) !== -1
+              favoritesFilm.findIndex((film) => film.id === item.id) !== -1
             }
             displayDetailForFilm={this.displayDetailForFilm}
           />

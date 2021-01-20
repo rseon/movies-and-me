@@ -7,8 +7,6 @@ import FilmList from '../components/FilmList';
 import Loading from '../components/Loading';
 import { NetworkContext } from '../components/NetworkProvider';
 
-Search.contextType = NetworkContext;
-
 class Search extends Component {
   
   constructor(props) {
@@ -113,6 +111,8 @@ class Search extends Component {
     );
   }
 }
+
+Search.contextType = NetworkContext;
 
 const black = '#000';
 
