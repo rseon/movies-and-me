@@ -1,157 +1,207 @@
 import React, { Component } from 'react'
-import { Image, Platform, ScrollView, Share, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import {
+  Alert,
+  Image,
+  Platform,
+  ScrollView,
+  Share,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { connect } from 'react-redux'
 import { getFilmDetailFromApi, getImageFromApi } from '../api/TMDB'
 import moment from 'moment'
 import numeral from 'numeral'
 import Loading from '../components/Loading'
 import EnlargeShrink from '../components/animations/EnlargeShrink'
+import { NetworkContext } from "../components/NetworkProvider";
 
 
 class FilmDetail extends Component {
+  static contextType = NetworkContext;
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            film: undefined,
-            isLoading: false,
+  constructor(props) {
+    super(props);
+    this.state = {
+      film: undefined,
+      isLoading: false,
+    };
+  }
+
+  componentDidMount() {
+    const favoriteFilmIndex = this.props.favoritesFilm.findIndex(
+      (item) => item.id === this.props.route.params.idFilm
+    );
+
+    if (favoriteFilmIndex !== -1) {
+      const film = this.props.favoritesFilm[favoriteFilmIndex];
+      this.setState(
+        {
+          film,
+        },
+        () => {
+          this._updateNavigationOptions();
         }
+      );
+      return;
     }
 
-    componentDidMount() {
-        const favoriteFilmIndex = this.props.favoritesFilm.findIndex(item => item.id === this.props.route.params.idFilm)
-
-        if(favoriteFilmIndex !== -1) {
-            const film = this.props.favoritesFilm[favoriteFilmIndex]
-            this.setState({
-                film
-            }, () => {
-                    this._updateNavigationOptions()
-            })
-            return
+    if (!this.context.isConnected) {
+        Alert.alert(
+          "Non connecté",
+          "Vous devez être connecté pour voir le détail du film"
+        );
+        this.props.navigation.goBack();
+      } else {
+            this.setState({ isLoading: true });
+            getFilmDetailFromApi(this.props.route.params.idFilm).then((data) => {
+            this.setState(
+                {
+                film: data,
+                isLoading: false,
+                },
+                () => {
+                this._updateNavigationOptions();
+                }
+            );
+            });
         }
+  }
 
-        this.setState({ isLoading: true })
-        getFilmDetailFromApi(this.props.route.params.idFilm)
-            .then(data => {
-                this.setState({
-                    film: data,
-                    isLoading: false
-                }, () => {
-                        this._updateNavigationOptions()
-                })
-            })
+  _updateNavigationOptions() {
+    let headerRight = () => null;
+    if (this.state.film !== undefined && Platform.OS === "ios") {
+      headerRight = () => (
+        <TouchableOpacity
+          style={styles.share_touchable_headerrightbutton}
+          onPress={() => this._shareFilm()}
+        >
+          <Image
+            style={styles.share_image}
+            source={require("../assets/images/share.ios.png")}
+          />
+        </TouchableOpacity>
+      );
     }
 
-    _updateNavigationOptions() {
-        let headerRight = () => null
-        if (this.state.film !== undefined && Platform.OS === 'ios') {
-            headerRight = () => (
-                <TouchableOpacity
-                    style={styles.share_touchable_headerrightbutton}
-                    onPress={() => this._shareFilm()}>
-                    <Image
-                        style={styles.share_image}
-                        source={require('../assets/images/share.ios.png')} />
-                </TouchableOpacity>
-            )
-        }
+    this.props.navigation.setOptions({
+      title: `${this.state.film.title} (${moment(
+        new Date(this.state.film.release_date)
+      ).format("YYYY")})`,
+      headerRight,
+    });
+  }
 
-        this.props.navigation.setOptions({
-            title: `${this.state.film.title} (${moment(new Date(this.state.film.release_date)).format('YYYY')})`,
-            headerRight
-        })
+  _toggleFavorite() {
+    this.props.dispatch({
+      type: "TOGGLE_FAVORITE",
+      value: this.state.film,
+    });
+  }
+
+  _displayFavoriteImage() {
+    let src = require("../assets/images/favorite_border.png");
+    let shouldEnlarge = false;
+    if (
+      this.props.favoritesFilm.findIndex(
+        (item) => item.id === this.state.film.id
+      ) !== -1
+    ) {
+      src = require("../assets/images/favorite.png");
+      shouldEnlarge = true;
     }
 
-    _toggleFavorite() {
-        this.props.dispatch({
-            type: "TOGGLE_FAVORITE",
-            value: this.state.film
-        })
+    return (
+      <EnlargeShrink shouldEnlarge={shouldEnlarge}>
+        <Image style={styles.favorite_image} source={src} />
+      </EnlargeShrink>
+    );
+  }
+
+  _displayFilm() {
+    const { film } = this.state;
+    if (film !== undefined) {
+      return (
+        <ScrollView style={styles.scrollview_container}>
+          <Image
+            style={styles.image}
+            source={{ uri: getImageFromApi(film.backdrop_path) }}
+          />
+          <Text style={styles.title_text}>{film.title}</Text>
+          <TouchableOpacity
+            style={styles.favorite_container}
+            onPress={() => this._toggleFavorite()}
+          >
+            {this._displayFavoriteImage()}
+          </TouchableOpacity>
+          <Text style={styles.description_text}>{film.overview}</Text>
+          <Text style={styles.default_text}>
+            Sorti le {moment(new Date(film.release_date)).format("DD/MM/YYYY")}
+          </Text>
+          <Text style={styles.default_text}>
+            Note : {film.vote_average} / 10
+          </Text>
+          <Text style={styles.default_text}>
+            Nombre de votes : {film.vote_count}
+          </Text>
+          <Text style={styles.default_text}>
+            Budget : {numeral(film.budget).format("0,0[.]00 $")}
+          </Text>
+          <Text style={styles.default_text}>
+            Genre(s) :{" "}
+            {film.genres
+              .map(function (genre) {
+                return genre.name;
+              })
+              .join(" / ")}
+          </Text>
+          <Text style={styles.default_text}>
+            Companie(s) :{" "}
+            {film.production_companies
+              .map(function (company) {
+                return company.name;
+              })
+              .join(" / ")}
+          </Text>
+        </ScrollView>
+      );
     }
+  }
 
-    _displayFavoriteImage() {
-        let src = require('../assets/images/favorite_border.png')
-        let shouldEnlarge = false
-        if(this.props.favoritesFilm.findIndex(item => item.id === this.state.film.id) !== -1) {
-            src = require('../assets/images/favorite.png')
-            shouldEnlarge = true
-        }
+  _shareFilm() {
+    const { film } = this.state;
+    Share.share({ title: film.title, message: film.overview });
+  }
 
-        return (
-            <EnlargeShrink shouldEnlarge={shouldEnlarge}>
-                <Image
-                    style={styles.favorite_image}
-                    source={src}
-                />
-            </EnlargeShrink>
-        )
+  _displayFloatingActionButton() {
+    const { film } = this.state;
+
+    if (film !== undefined && Platform.OS === "android") {
+      return (
+        <TouchableOpacity
+          style={styles.share_touchable_floatingactionbutton}
+          onPress={() => this._shareFilm()}
+        >
+          <Image
+            style={styles.share_image}
+            source={require("../assets/images/share.png")}
+          />
+        </TouchableOpacity>
+      );
     }
+  }
 
-    _displayFilm() {
-        const { film } = this.state
-        if (film !== undefined) {
-            return (
-                <ScrollView style={styles.scrollview_container}>
-                    <Image
-                        style={styles.image}
-                        source={{ uri: getImageFromApi(film.backdrop_path) }}
-                    />
-                    <Text style={styles.title_text}>{film.title}</Text>
-                    <TouchableOpacity
-                        style={styles.favorite_container}
-                        onPress={() => this._toggleFavorite()}
-                    >
-                        {this._displayFavoriteImage()}
-                    </TouchableOpacity>
-                    <Text style={styles.description_text}>{film.overview}</Text>
-                    <Text style={styles.default_text}>Sorti le {moment(new Date(film.release_date)).format('DD/MM/YYYY')}</Text>
-                    <Text style={styles.default_text}>Note : {film.vote_average} / 10</Text>
-                    <Text style={styles.default_text}>Nombre de votes : {film.vote_count}</Text>
-                    <Text style={styles.default_text}>Budget : {numeral(film.budget).format('0,0[.]00 $')}</Text>
-                    <Text style={styles.default_text}>Genre(s) : {film.genres.map(function (genre) {
-                        return genre.name;
-                    }).join(" / ")}
-                    </Text>
-                    <Text style={styles.default_text}>Companie(s) : {film.production_companies.map(function (company) {
-                        return company.name;
-                    }).join(" / ")}
-                    </Text>
-                </ScrollView>
-            )
-        }
-    }
-
-    _shareFilm() {
-        const { film } = this.state
-        Share.share({ title: film.title, message: film.overview })
-    }
-
-    _displayFloatingActionButton() {
-        const { film } = this.state
-
-        if (film !== undefined && Platform.OS === 'android') {
-            return (
-                <TouchableOpacity
-                    style={styles.share_touchable_floatingactionbutton}
-                    onPress={() => this._shareFilm()}>
-                    <Image
-                        style={styles.share_image}
-                        source={require('../assets/images/share.png')} />
-                </TouchableOpacity>
-            )
-        }
-    }
-
-    render() {
-        return (
-            <View style={styles.main_container}>
-                <Loading isLoading={ this.state.isLoading } full={true} />
-                {this._displayFilm()}
-                {this._displayFloatingActionButton()}
-            </View>
-        )
-    }
+  render() {
+    return (
+      <View style={styles.main_container}>
+        <Loading isLoading={this.state.isLoading} full={true} />
+        {this._displayFilm()}
+        {this._displayFloatingActionButton()}
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
