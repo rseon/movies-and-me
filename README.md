@@ -20,3 +20,4 @@ Not exactly the same as course (some depreciations like Navigation) and improvem
 - [ ] Save searches for history
 - [x] Pull-to-refresh on search
 - [ ] Add eslint
+- [x] Confirmation message when favorite is added/removed

@@ -13,6 +13,7 @@ export default function toggleFavorite(state = initialState, action) {
                     ...state,
                     favoritesFilm: state.favoritesFilm.filter((item, index) => index !== favoriteFilmIndex)
                 }
+                toast.show("Film retiré des favoris", { type: "success" });
             }
             else {
                 // Le film n'est pas dans les films favoris, on l'ajoute à la liste
@@ -20,6 +21,7 @@ export default function toggleFavorite(state = initialState, action) {
                     ...state,
                     favoritesFilm: [...state.favoritesFilm, action.value]
                 }
+                toast.show("Film ajouté aux favoris", { type: "success" });
             }
             return nextState || state
         default:

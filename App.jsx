@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import Navigation from './src/navigation/Navigation';
 import Store from './src/store/configureStore'
 import { NetworkProvider } from "./src/components/NetworkProvider";
+import Toast from "react-native-fast-toast";
 
 export default function App() {
 
@@ -11,6 +12,7 @@ export default function App() {
       <NetworkProvider>
         <Navigation />
       </NetworkProvider>
+      <Toast ref={(ref) => (global["toast"] = ref)} />
     </Provider>
   );
 }
