@@ -7,12 +7,14 @@ class Favorites extends Component {
 
     render() {
         return (
-            <FilmList
-                films={this.props.favoritesFilm}
-                navigation={this.props.navigation}
-                favoriteList={true}
-            />
-        )
+          <FilmList
+            films={this.props.favoritesFilm}
+            navigation={this.props.navigation}
+            favoriteList={true}
+            initSearchFilms={() => {}}
+            isRefreshing={false}
+          />
+        );
     }
 }
 

@@ -13,6 +13,7 @@ class Search extends Component {
     this.state = {
       films: [],
       isLoading: false,
+      isRefreshing: false
     };
     this.searchedText = "";
     this.pagination = {
@@ -21,7 +22,8 @@ class Search extends Component {
     };
 
     // Permet d'appeler cette méthode dans d'autres components en étant bindé à celui-ci
-    this._loadFilms = this._loadFilms.bind(this)
+    this._loadFilms = this._loadFilms.bind(this);
+    this._initSearchFilms = this._initSearchFilms.bind(this);
   }
 
   // Private methods
@@ -46,6 +48,7 @@ class Search extends Component {
           this.setState({
             films: [...this.state.films, ...data.results],
             isLoading: false,
+            isRefreshing: false
           });
         });
       }
@@ -54,7 +57,7 @@ class Search extends Component {
   _searchTextInputChanged(text) {
     this.searchedText = text;
   }
-  _searchFilms() {
+  _initSearchFilms() {
     this.pagination = {
       current: 0,
       total: 0,
@@ -77,9 +80,9 @@ class Search extends Component {
           style={styles.textinput}
           placeholder="Titre du film"
           onChangeText={(text) => this._searchTextInputChanged(text)}
-          onSubmitEditing={() => this._searchFilms()}
+          onSubmitEditing={() => this._initSearchFilms()}
         />
-        <Button title="Rechercher" onPress={() => this._searchFilms()} />
+        <Button title="Rechercher" onPress={() => this._initSearchFilms()} />
 
         <FilmList
           films={this.state.films}
@@ -89,6 +92,8 @@ class Search extends Component {
           favoriteList={false}
           isLoading={this.state.isLoading}
           searchedText={this.searchedText}
+          initSearchFilms={this._initSearchFilms}
+          isRefreshing={this.state.isRefreshing}
         />
 
         <Loading isLoading={this.state.isLoading} full={false} />

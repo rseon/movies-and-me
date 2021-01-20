@@ -5,13 +5,6 @@ import { connect } from 'react-redux'
 
 class FilmList extends Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      films: []
-    }
-  }
-
   _displayDetailForFilm = (idFilm) => {
     this.props.navigation.navigate('FilmDetail', { idFilm })
   }
@@ -30,26 +23,39 @@ class FilmList extends Component {
     }
 
     return (
-        <FlatList
-          style={styles.list}
-          data={this.props.films}
-          extraData={this.props.favoritesFilm}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({item}) => (
-            <FilmItem
-              film={item}
-              isFilmFavorite={(this.props.favoritesFilm.findIndex(film => film.id === item.id) !== -1) ? true : false}
-              displayDetailForFilm={this._displayDetailForFilm}
-            />
-          )}
-          onEndReachedThreshold={0.5}
-          onEndReached={() => {
-            if (!this.props.favoriteList && this.props.pagination.current < this.props.pagination.total) {
-              this.props.loadFilms()
+      <FlatList
+        style={styles.list}
+        data={this.props.films}
+        extraData={this.props.favoritesFilm}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <FilmItem
+            film={item}
+            isFilmFavorite={
+              this.props.favoritesFilm.findIndex(
+                (film) => film.id === item.id
+              ) !== -1
+                ? true
+                : false
             }
-          }}
-        />
-    )
+            displayDetailForFilm={this._displayDetailForFilm}
+          />
+        )}
+        onEndReachedThreshold={0.5}
+        onEndReached={() => {
+          if (
+            !this.props.favoriteList &&
+            this.props.pagination.current < this.props.pagination.total
+          ) {
+            this.props.loadFilms();
+          }
+        }}
+        refreshing={this.props.isRefreshing}
+        onRefresh={() => {
+            this.props.initSearchFilms()
+        }}
+      />
+    );
   }
 }
 

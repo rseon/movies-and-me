@@ -18,5 +18,5 @@ Not exactly the same as course (some depreciations like Navigation) and improvem
     - [issue 2](https://github.com/react-native-netinfo/react-native-netinfo/issues/308#issuecomment-589555555)
     - [issue 3](https://github.com/react-native-netinfo/react-native-netinfo/issues/332#issuecomment-753475964)
 - [ ] Save searches for history
-- [ ] Pull-to-refresh on search
+- [x] Pull-to-refresh on search
 - [ ] Add eslint
