@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
 });
 
 export default connect((state) => {
-  const { favoritesFilm } = state;
+  const { favoritesFilm } = state.toggleFavorite;
   return {
     favoritesFilm
   };

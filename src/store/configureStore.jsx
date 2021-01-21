@@ -1,7 +1,13 @@
 import { createStore } from 'redux';
+import { persistCombineReducers } from 'redux-persist';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import toggleFavorite from './reducers/favoriteReducer';
 
+const rootPersistConfig = {
+  key: 'root',
+  storage: AsyncStorage,
+};
+
 export default createStore(
-  toggleFavorite,
-  // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  persistCombineReducers(rootPersistConfig, { toggleFavorite })
 );

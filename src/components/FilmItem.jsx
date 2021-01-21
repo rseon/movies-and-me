@@ -49,6 +49,7 @@ export default class FilmItem extends Component {
             <View style={styles.date_container}>
               <Text style={styles.date_text}>
                 Sorti le
+                {' '}
                 {moment(new Date(film.release_date)).format('DD/MM/YYYY')}
               </Text>
             </View>

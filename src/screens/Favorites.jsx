@@ -15,7 +15,7 @@ const Favorites = ({ favoritesFilm, navigation }) => {
 };
 
 export default connect((state) => {
-  const { favoritesFilm } = state;
+  const { favoritesFilm } = state.toggleFavorite;
   return {
     favoritesFilm
   };

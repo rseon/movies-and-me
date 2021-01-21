@@ -11,7 +11,7 @@ Not exactly the same as course (some depreciations like Navigation) and improvem
 - [ ] Loading component : fix styles as props - [see here](https://stackoverflow.com/questions/29363671/can-i-make-dynamic-styles-in-react-native)
 - [x] Rename `.js` to `.jsx`
 - [x] Move sensitive data to `.env` file
-- [ ] Save favorites to local storage
+- [x] Save favorites to local storage
 - [x] Check connectivity and share it between components
     - [How to easily manage connection status updates in React Native](https://medium.com/free-code-camp/easily-manage-connection-status-updates-in-react-native-28c9b4b0647f)
     - [issue 1](https://github.com/react-native-netinfo/react-native-netinfo/issues/279#issuecomment-570782836)
@@ -21,3 +21,6 @@ Not exactly the same as course (some depreciations like Navigation) and improvem
 - [x] Pull-to-refresh on search
 - [x] Add eslint - [see here](https://medium.com/swlh/add-eslint-support-to-your-react-native-project-with-react-hooks-1bbac3fac25d) - (bad idea 🤣)
 - [x] Confirmation message when favorite is added/removed
+- [ ] Use [PropTypes](https://github.com/facebook/prop-types)
+- [ ] Catch API errors
+- [ ] Add filters on favorites list
