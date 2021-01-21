@@ -1,3 +1,4 @@
+/* global toast */
 import React, { Component } from 'react';
 import {
   Alert, Button, Keyboard, StyleSheet, TextInput, View
@@ -43,19 +44,25 @@ class Search extends Component {
         getFilmsFromApiWithSearchedText(
           this.searchedText,
           this.pagination.current + 1
-        ).then((data) => {
-          this.pagination = {
-            current: data.page,
-            total: data.total_pages,
-          };
-          this.setState((prevstate) => {
-            return { films: [...prevstate.films, ...data.results] };
+        )
+          .then((data) => {
+            this.pagination = {
+              current: data.page,
+              total: data.total_pages,
+            };
+            this.setState((prevstate) => {
+              return { films: [...prevstate.films, ...data.results] };
+            });
+          })
+          .catch((error) => {
+            toast.show(`Erreur : ${error.message}`, { type: 'warning' })
+          })
+          .finally(() => {
+            this.setState({
+              isLoading: false,
+              isRefreshing: false,
+            });
           });
-          this.setState({
-            isLoading: false,
-            isRefreshing: false,
-          });
-        });
       }
     }
   }

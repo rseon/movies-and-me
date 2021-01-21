@@ -22,5 +22,5 @@ Not exactly the same as course (some depreciations like Navigation) and improvem
 - [x] Add eslint - [see here](https://medium.com/swlh/add-eslint-support-to-your-react-native-project-with-react-hooks-1bbac3fac25d) - (bad idea 🤣)
 - [x] Confirmation message when favorite is added/removed
 - [ ] Use [PropTypes](https://github.com/facebook/prop-types)
-- [ ] Catch API errors
+- [x] Catch API errors and change to [axios](https://github.com/axios/axios)
 - [ ] Add filters on favorites list

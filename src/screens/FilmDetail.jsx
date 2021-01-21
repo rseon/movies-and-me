@@ -1,3 +1,4 @@
+/* global toast */
 import React, { Component } from 'react';
 import {
   Alert,
@@ -63,17 +64,23 @@ class FilmDetail extends Component {
       navigation.goBack();
     } else {
       this.setState({ isLoading: true });
-      getFilmDetailFromApi(route.params.idFilm).then((data) => {
-        this.setState(
-          {
-            film: data,
-            isLoading: false,
-          },
-          () => {
+      getFilmDetailFromApi(route.params.idFilm)
+        .then((data) => {
+          this.setState({
+            film: data
+          }, () => {
             this.updateNavigationOptions();
-          }
-        );
-      });
+          });
+        })
+        .catch((error) => {
+          toast.show(`Erreur : ${error.message}`, { type: 'warning' });
+          navigation.goBack();
+        })
+        .finally(() => {
+          this.setState({
+            isLoading: false
+          });
+        });
     }
   }
 
