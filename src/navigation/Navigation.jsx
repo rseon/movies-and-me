@@ -21,10 +21,7 @@ function SearchStackScreen() {
         component={Search}
         options={{ title: 'Rechercher' }}
       />
-      <SearchStack.Screen
-        name="FilmDetail"
-        component={FilmDetail}
-      />
+      <SearchStack.Screen name="FilmDetail" component={FilmDetail} />
     </SearchStack.Navigator>
   );
 }
@@ -38,10 +35,7 @@ function FavoritesStackScreen() {
         component={Favorites}
         options={{ title: 'Favoris' }}
       />
-      <FavoritesStack.Screen
-        name="FilmDetail"
-        component={FilmDetail}
-      />
+      <FavoritesStack.Screen name="FilmDetail" component={FilmDetail} />
     </FavoritesStack.Navigator>
   );
 }
@@ -81,14 +75,14 @@ export default function MainNavigator() {
           activeBackgroundColor: '#DDDDDD',
           inactiveBackgroundColor: '#FFFFFF',
           showLabel: true,
-          showIcon: true
+          showIcon: true,
         }}
       >
         <Tab.Screen
           name="Test"
           component={TestStackScreen}
           options={{
-            tabBarLabel: 'Tests'
+            tabBarLabel: 'Tests',
           }}
         />
         <Tab.Screen
@@ -97,13 +91,8 @@ export default function MainNavigator() {
           options={{
             tabBarLabel: () => null,
             tabBarIcon: () => {
-              return (
-                <Image
-                  source={imgSearch}
-                  style={styles.icon}
-                />
-              );
-            }
+              return <Image source={imgSearch} style={styles.icon} />;
+            },
           }}
         />
         <Tab.Screen
@@ -112,13 +101,8 @@ export default function MainNavigator() {
           options={{
             tabBarLabel: () => null,
             tabBarIcon: () => {
-              return (
-                <Image
-                  source={imgFavorite}
-                  style={styles.icon}
-                />
-              );
-            }
+              return <Image source={imgFavorite} style={styles.icon} />;
+            },
           }}
         />
       </Tab.Navigator>
@@ -129,6 +113,6 @@ export default function MainNavigator() {
 const styles = StyleSheet.create({
   icon: {
     width: 30,
-    height: 30
-  }
+    height: 30,
+  },
 });

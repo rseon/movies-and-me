@@ -16,7 +16,7 @@ export function getImageFromApi(name) {
 export function getFilmDetailFromApi(id) {
   return axios
     .get(
-      `https://api.themoviedb.org/3a/movie/${id}?api_key=${TMDB_API_TOKEN}&language=fr`
+      `https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_TOKEN}&language=fr`
     )
     .then((response) => response.data);
 }

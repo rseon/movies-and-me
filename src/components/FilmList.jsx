@@ -20,7 +20,7 @@ class FilmList extends Component {
       films,
       loadFilms,
       pagination,
-      searchedText,
+      searchedText
     } = this.props;
 
     if (isLoading && (!films || !films.length)) {
